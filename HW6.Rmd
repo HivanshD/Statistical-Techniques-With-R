@@ -1,0 +1,114 @@
+---
+title: "HW6"
+author: "Hivansh Dhakne"
+date: "2023-11-25"
+output: pdf_document
+---
+
+# Problem 1
+```{r}
+library(ISwR)
+data <- read.table("C:\\Users\\hivan\\Downloads\\d_logret_6stocks (6).txt", header = TRUE)
+```
+## (a)
+```{r}
+model <- lm(Intel ~ Citigroup + Pfizer + AmerExp + Exxon, data = data)
+anova_table <- anova(model)
+print(anova_table)
+```
+## (b)
+```{r}
+coef_test <- summary(model)$coefficients["Exxon", "Pr(>|t|)"]
+coef_test
+"Fail to reject the null hypothesis. The coefficient of Exxon is not significantly different from zero.\n"
+```
+## (c)
+```{r}
+reduced_model <- lm(Intel ~ Citigroup + Pfizer + AmerExp, data = data)
+partial_F_test <- anova(reduced_model, model)
+print(partial_F_test)
+# Reject the null hypothesis that the coefficient of 'Exxon' is zero."
+```
+## (d)
+```{r}
+group_model <- aov(cbind(Citigroup, Pfizer, AmerExp, Exxon, GenMotor) ~ 1, data = data)
+print(summary(group_model))
+```
+## (e)
+```{r}
+summary(group_model)
+```
+## (f)
+```{r}
+group_model_noe <- aov(cbind(Citigroup, Pfizer, AmerExp, Exxon, GenMotor) ~ 1, data = data, var.equal = FALSE)
+print(summary(group_model_noe))
+```
+## (g)
+```{r}
+kruskal.test(data[, c("Citigroup", "Pfizer", "AmerExp", "Exxon", "GenMotor")])
+```
+
+# Problem 2
+```{r}
+data <- data.frame(
+  Caffeine_Dose = rep(c(0, 100, 200), each = 10),
+  Finger_Taps = c(242, 245, 244, 248, 247, 248, 242, 244, 246, 242,
+                  248, 246, 245, 247, 248, 250, 247, 246, 243, 244,
+                  246, 248, 250, 252, 248, 250, 246, 248, 245, 250)
+)
+```
+## (a)
+```{r}
+boxplot(Finger_Taps ~ Caffeine_Dose, data = data, col = "blue", main = "Finger Taps by Caffeine Dose", xlab = "Caffeine Dose (mg)", ylab = "Finger Taps per Minute")
+```
+## (b)
+```{r}
+library(ggplot2)
+
+# Calculate means and SEMs
+means <- tapply(data$Finger_Taps, data$Caffeine_Dose, mean)
+sems <- tapply(data$Finger_Taps, data$Caffeine_Dose, function(x) sd(x)/sqrt(length(x)))
+
+# Create a stripchart
+p <- ggplot(data, aes(x = as.factor(Caffeine_Dose), y = Finger_Taps)) +
+  geom_jitter(position = position_jitter(width = 0.1), color = "blue") +
+  geom_point(stat = "summary", fun = mean, shape = 20, size = 3, 
+             color = "red") +
+  geom_errorbar(stat = "summary", fun.data = mean_se, width = 0.2, 
+                color = "red") +
+  labs(title = "Finger Taps by Caffeine Dose",
+       x = "Caffeine Dose (mg)",
+       y = "Finger Taps per Minute")
+
+print(p)
+```
+## (c)
+```{r}
+model <- lm(Finger_Taps ~ Caffeine_Dose, data = data)
+residuals <- residuals(model)
+qqnorm(residuals)
+qqline(residuals)
+shapiro.test(residuals)
+```
+## (d)
+```{r}
+plot(model$fitted.values, residuals, xlab = "Fitted Values", ylab = 
+       "Residuals", main = "Residuals vs Fitted Values", pch = 16)
+abline(h = 0, col = "blue")
+bartlett.test(residuals ~ model$fitted.values)
+```
+## (e)
+```{r}
+anova_result <- anova(model)
+print(anova_result)
+"There are significant differences in finger tapping between the 
+        students treated with different doses of caffeine."
+```
+## (f)
+```{r}
+ph <- pairwise.t.test(data$Finger_Taps, data$Caffeine_Dose, p.adj = 
+                        "bonferroni")
+print(ph)
+"There are significant differences between at least one pair of groups."
+```
+

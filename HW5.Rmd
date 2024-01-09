@@ -1,0 +1,126 @@
+---
+title: 'AMS 394: Homework #3'
+author: "Hivansh Dhakne"
+date: "2023-11-05"
+output: pdf_document
+---
+
+# Problem 1
+```{r}
+advertising_expenses <- c(2.4, 1.6, 2.0, 2.6, 1.4, 1.6, 2.0, 2.2)
+company_sales <- c(225, 184, 220, 240, 180, 184, 186, 215)
+```
+## (a)
+```{r}
+plot(advertising_expenses, company_sales, xlab = "Advertising Expenses", ylab = "Company Sales", main = "Scatter Plot of Advertising Expenses vs. Company Sales")
+```
+## (b)
+```{r}
+spearman_correlation <- cor(advertising_expenses, company_sales, method = "spearman")
+spearman_correlation
+```
+## (c)
+```{r}
+spearman_test <- cor.test(advertising_expenses, company_sales, method = "spearman")
+spearman_test
+```
+## (d)
+```{r}
+linear_model <- lm(company_sales ~ advertising_expenses)
+summary(linear_model)
+```
+## (e)
+```{r}
+coefficient_test <- summary(linear_model)$coefficients["advertising_expenses", "Pr(>|t|)"]
+coefficient_test
+"The coefficient of Advertising Expenses is not equal to zero"
+```
+## (f)
+```{r}
+r_squared <- summary(linear_model)$r.squared
+r_squared
+```
+## (g)
+```{r}
+plot(linear_model)
+```
+
+## (h)
+```{r}
+new_data <- data.frame(advertising_expenses = 1.8)
+predicted_sales <- predict(linear_model, newdata = new_data)
+predicted_sales
+```
+## (i)
+```{r}
+new_data <- data.frame(advertising_expenses = advertising_expenses)
+confidence_intervals <- predict(linear_model, newdata = new_data, interval = "confidence")
+prediction_intervals <- predict(linear_model, newdata = new_data, interval = "prediction")
+confidence_intervals
+prediction_intervals
+```
+## (j)
+```{r}
+plot(advertising_expenses, company_sales, xlab = "Advertising Expenses", ylab = "Company Sales", main = "Scatter Plot of Advertising Expenses vs. Company Sales w/ Fitted Line")
+abline(linear_model)
+```
+
+# Problem 2
+```{r}
+library(MASS)
+data <- read.table("C:\\Users\\hivan\\Downloads\\d_logret_6stocks.txt", header = TRUE)
+```
+## (a)
+```{r}
+intel_returns <- data$Intel
+citigroup_returns <- data$Citigroup
+pearson_correlation <- cor(intel_returns, citigroup_returns, method = "pearson")
+pearson_correlation
+```
+## (b)
+```{r}
+cor_test <- cor.test(intel_returns, citigroup_returns, method = "pearson")
+cor_test
+```
+## (c)
+```{r}
+simple_lm <- lm(intel_returns ~ citigroup_returns)
+summary(simple_lm)
+```
+## (d)
+```{r}
+multi_lm <- lm(intel_returns ~ citigroup_returns + Pfizer + AmerExp + Exxon, data = data)
+summary(multi_lm)
+```
+## (e)
+```{r}
+multi_lm_test <- anova(multi_lm)
+multi_lm_test
+```
+## (f)
+```{r}
+exxon_coef_test <- summary(multi_lm)$coefficients["Exxon", "Pr(>|t|)"]
+cat("(f) Test for Coefficient of Exxon:\n")
+"The coefficient of Exxon is equal to zero."
+```
+## (g)
+```{r}
+exxon_coef_ci <- confint(multi_lm, "Exxon")
+exxon_coef_ci
+```
+## (h)
+```{r}
+adjusted_r_squared <- summary(multi_lm)$adj.r.squared
+adjusted_r_squared
+```
+## (i)
+```{r}
+bidirectional_model <- stepAIC(multi_lm, direction = "both")
+bidirectional_model
+```
+## (j)
+```{r}
+backward_model <- stepAIC(multi_lm, direction = "backward")
+backward_model
+```
+

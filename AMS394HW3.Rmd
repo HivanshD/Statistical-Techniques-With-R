@@ -1,0 +1,145 @@
+---
+title: 'AMS 394: Homework #3'
+author: "Hivansh Dhakne"
+date: "2023-10-02"
+output: pdf_document
+---
+
+# Problem 1
+```{r}
+library(ISwR)
+library(MASS)
+data(react)
+```
+## (a)
+```{r}
+length <- length(react)
+length
+mean <- mean(react)
+mean
+sd <- sd(react)
+sd
+variance <- var(react)
+variance
+median <- median(react)
+median
+quant <- quantile(react)
+quant
+min <- min(react)
+min
+max <- max(react)
+max
+```
+## (b)
+```{r}
+hist(react)
+```
+
+## (c)
+```{r}
+truehist(react)
+```
+
+## (d)
+```{r}
+sort_react <- sort(react)
+plot(sort_react, y = seq(0, 1, length.out = length(sort_react)))
+```
+
+## (e)
+```{r}
+emp <- ecdf(react)
+plot(emp)
+```
+
+## (f)
+```{r}
+qqnorm(react, main = "Q-Q Plot of react")
+qqline(react)
+```
+
+## (g)
+```{r}
+boxplot(react)
+```
+
+# Problem 2
+```{r}
+library(ISwR)
+data(ashina)
+```
+## (a)
+```{r}
+summary(ashina)
+```
+## (b)
+```{r}
+ashina$grp <- factor(ashina$grp, levels = c(1, 2), labels = c("placebo first", "active first"))
+```
+## (c)
+```{r}
+ashina_t <- transform(ashina, grp = factor(grp, levels = c(1, 2), labels = c("placebo first", "active first")))
+```
+## (d)
+```{r}
+ashina_w <- within(ashina, grp <- factor(grp, levels = c(1, 2), labels = c("placebo first", "active first")))
+```
+## (e)
+```{r}
+table(ashina$grp)
+```
+## (f)
+```{r}
+cbind(tapply(ashina$vas.active, ashina$grp, mean), tapply(ashina$vas.active, ashina$grp, sd), tapply(ashina$vas.active, ashina$grp, length))
+```
+## (h)
+```{r}
+by(ashina, ashina$grp, summary)
+```
+## (i)
+```{r}
+par(mfrow = c(1, 2))
+hist(ashina$vas.active[ashina$grp == "placebo first"])
+hist(ashina$vas.active[ashina$grp == "active first"])
+
+```
+
+## (j)
+```{r}
+boxplot(ashina$vas.active ~ ashina$grp)
+```
+
+## (k)
+```{r}
+stripchart(ashina$vas.active ~ ashina$grp)
+```
+
+# Problem 3
+
+## (a)
+```{r}
+accidents <- matrix(c(25, 121, 18, 92, 13, 130, 6, 87), ncol = 2, byrow = TRUE)
+rownames(accidents) <- c("18 - 20", "21 - 23", "24 - 25", "> 25")
+colnames(accidents) <- c("Yes", "No")
+acc_table <- as.table(accidents)
+
+acc_table
+```
+
+## (b)
+```{r}
+row_sum <- rowSums(acc_table)
+marginal_table <- data.frame(RowSums = row_sum)
+rownames(marginal_table) <- rownames(acc_table)
+marginal_table
+```
+
+## (c)
+```{r}
+rel_frequencies <- prop.table(acc_table)
+rel_frequencies
+```
+## (d)
+```{r}
+barplot(acc_table, beside = TRUE)
+```

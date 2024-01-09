@@ -1,0 +1,140 @@
+---
+title: "HW7"
+author: "Hivansh Dhakne"
+date: "2023-12-04"
+output: pdf_document
+---
+
+# Problem 1
+```{r}
+success_count <- 10
+total_shoppers <- 18
+```
+## (a)
+```{r}
+prop_test_result <- prop.test(success_count, total_shoppers, p = 0.40, alternative = "greater")
+
+# Display the result
+prop_test_result
+alpha <- 0.05
+if (prop_test_result$p.value < alpha) {
+  cat("Reject the null hypothesis at the", alpha, "level of significance.\n")
+} else {
+  cat("Fail to reject the null hypothesis at the", alpha, "level of significance.\n")
+}
+```
+## (b)
+```{r}
+binom_test_result <- binom.test(success_count, total_shoppers, p = 0.40, alternative = "greater")
+
+# Display the result
+binom_test_result
+if (binom_test_result$p.value < alpha) {
+  cat("Reject the null hypothesis at the", alpha, "level of significance.\n")
+} else {
+  cat("Fail to reject the null hypothesis at the", alpha, "level of significance.\n")
+}
+```
+
+# Problem 2
+```{r}
+cold_data <- matrix(c(17, 122, 31, 109), nrow = 2, byrow = TRUE)
+colnames(cold_data) <- c("Yes", "No")
+rownames(cold_data) <- c("Vitamin C", "Placebo")
+```
+## (a)
+```{r}
+prop_test_result <- prop.test(cold_data[, "Yes"], cold_data[, "Yes"] + cold_data[, "No"])
+
+# Display the result
+prop_test_result
+alpha <- 0.05
+if (prop_test_result$p.value < alpha) {
+  cat("Reject the null hypothesis at the", alpha, "level of significance.\n")
+} else {
+  cat("Fail to reject the null hypothesis at the", alpha, "level of significance.\n")
+}
+
+```
+## (b)
+```{r}
+chi_square_result <- chisq.test(cold_data)
+
+# Display the result
+chi_square_result
+if (chi_square_result$p.value < alpha) {
+  cat("Reject the null hypothesis at the", alpha, "level of significance.\n")
+} else {
+  cat("Fail to reject the null hypothesis at the", alpha, "level of significance.\n")
+}
+```
+## (c)
+```{r}
+fisher_test_result <- fisher.test(cold_data)
+
+# Display the result
+fisher_test_result
+if (fisher_test_result$p.value < alpha) {
+  cat("Reject the null hypothesis at the", alpha, "level of significance.\n")
+} else {
+  cat("Fail to reject the null hypothesis at the", alpha, "level of significance.\n")
+}
+```
+
+# Problem 3
+```{r}
+data <- matrix(c(26, 15, 7, 37), nrow = 2, byrow = TRUE)
+r <- mcnemar.test(data)
+r
+```
+
+# Problem 4
+```{r}
+data <- data.frame(
+  city = c("Los Angeles", "San Diego", "Fresno"),
+  favor_a = c(232, 260, 197),
+  favor_b = c(168, 240, 203),
+  total = c(400, 500, 400)
+)
+```
+## (a)
+```{r}
+prop_test <- prop.test(
+  x = c(232, 260, 197),
+  n = c(400, 500, 400),
+  correct = FALSE
+)
+prop_test
+"reject the null hypothesis"
+```
+## (b)
+```{r}
+chisq_test <- chisq.test(table(data$city, data$favor_a))
+chisq_test
+"fail to reject the null hypothesis"
+```
+
+# Problem 5
+```{r}
+observed_counts <- c(12, 7, 12, 7, 13, 13, 7, 13, 6, 10)
+expected_counts <- rep(10, 10)
+chi_square <- chisq.test(observed_counts, p = expected_counts / sum(expected_counts))
+chi_square
+"Fail to reject the null hypothesis: The counts are in agreement with the uniform distribution model.\n"
+```
+
+# Problem 6
+```{r}
+survey_data <- matrix(c(20, 24, 80, 82, 22, 38, 104, 125, 13, 28, 81, 113, 7, 18, 54, 92),nrow = 4, byrow = TRUE)
+
+income_categories <- c("< 6000", "6000 - 15,000", "15,000 - 25,000", "> 25,000")
+job_satisfaction <- c("Very Dissatisfied", "Little Dissatisfied", "Moderately Satisfied", "Very Satisfied")
+df <- data.frame(Income = rep(income_categories, each = 4),
+                 JobSatisfaction = rep(job_satisfaction, times = 4),
+                 Count = as.vector(survey_data))
+contingency <- xtabs(Count ~ Income + JobSatisfaction, data = df)
+result <- chisq.test(contingency)
+result
+"fail to reject the null hypothesis"
+```
+

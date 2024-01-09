@@ -1,0 +1,107 @@
+---
+title: "Homework4"
+author: "Hivansh Dhakne"
+output: pdf_document
+date: "2023-10-24"
+---
+
+# Problem 1
+```{r}
+data <- read.table("C:\\Users\\hivan\\Downloads\\d_logret_6stocks.txt", header = TRUE)
+intel_logret <- data$Intel
+Pfizer_logret <- data$Pfizer
+```
+## (a)
+```{r}
+t_test <- t.test(intel_logret, mu = 0)
+t_test
+```
+Reject the null hypothesis
+
+## (b)
+```{r}
+wilcoxon_test <- wilcox.test(intel_logret, mu = 0, paired = FALSE)
+wilcoxon_test
+```
+Fail to reject the null hypothesis
+
+## (c)
+```{r}
+t_test_unequal <- t.test(intel_logret, Pfizer_logret, var.equal = FALSE)
+t_test_unequal
+```
+Fail to reject the null hypothesis
+
+## (d)
+```{r}
+t_test_equal <- t.test(intel_logret, Pfizer_logret, var.equal = TRUE)
+t_test_equal
+```
+Fail to reject the null Hypothesis
+
+## (e)
+```{r}
+wilcoxon <- wilcox.test(intel_logret, Pfizer_logret, paired = FALSE)
+wilcoxon
+```
+Fail to reject the null hypothesis
+
+## (f)
+```{r}
+f <- var.test(intel_logret, Pfizer_logret)
+f
+```
+Fail to reject the null hypothesis
+
+# Problem 2
+```{r}
+line1 <- c(1.18, 1.42, 0.69, 0.88, 1.62, 1.09, 1.53, 1.02, 1.19, 1.32)
+line2 <- c(1.72, 1.62, 1.69, 0.79, 1.79, 0.77, 1.44, 1.29, 1.96, 0.99)
+```
+
+## (a)
+```{r}
+t_test <- t.test(line1, line2, var.equal = TRUE)
+conf_int <- t_test$conf.int
+p_value <- t_test$p.value
+
+conf_int
+p_value
+```
+
+## (b)
+```{r}
+t_test <- t.test(line1, line2, var.equal = FALSE)
+conf_int <- t_test$conf.int
+p_value <- t_test$p.value
+
+conf_int
+p_value
+```
+There is no statistical significance at 0.05
+
+# Problem 3
+```{r}
+affected_eye <- c(488, 478, 480, 426, 440, 410, 458, 460)
+unaffected_eye <- c(484, 478, 492, 444, 436, 398, 464, 476)
+```
+
+## (a)
+```{r}
+
+t_test <- t.test(affected_eye, unaffected_eye, conf.level = 0.90)
+p_value <- t_test$p.value
+
+t_test
+```
+Fail to reject the null hypothesis. There is no evidence of a difference in corneal thickness.
+
+## (b)
+```{r}
+conf_interval <- t_test$conf.int
+conf_interval[1]
+conf_interval[2]
+
+```
+
+
